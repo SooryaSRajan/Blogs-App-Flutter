@@ -44,17 +44,33 @@ class _BlogsListPageState extends State<BlogsListPage> {
       appBar: AppBar(
         title: const Text("Blogs"),
       ),
-      body: ListView.builder(
-        itemCount: list.length,
-        itemBuilder: (BuildContext context, int index) {
-          return Card(
-            child: ListTile(
-              title: Text( "\"${list[index].blogTitle}\""),
-              subtitle: Text("By ${list[index].authorName}"),
-              // leading: Text(list[index].date ?? "date"),
-            ),
-          );
+      body: RefreshIndicator(
+        onRefresh: () async {
+          _getData();
         },
+        child:
+        list.isNotEmpty ?
+        ListView.builder(
+          itemCount: list.length,
+          itemBuilder: (BuildContext context, int index) {
+            return Card(
+              child: ListTile(
+                title: Text("\"${list[index].blogTitle}\""),
+                subtitle: Text("By ${list[index].authorName}"),
+                // leading: Text(list[index].date ?? "date"),
+              ),
+            );
+          },
+        ) : SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: ConstrainedBox(
+                constraints: BoxConstraints(
+                    minWidth: MediaQuery.of(context).size.width,
+                    minHeight: MediaQuery.of(context).size.height
+                ),
+                child: Center(child: const Text("No blogs yet, check back later :)"))
+            )
+        ),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {},
