@@ -5,6 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import 'blog.dart';
+
 class BlogsListPage extends StatefulWidget {
   const BlogsListPage({Key? key}) : super(key: key);
 
@@ -17,6 +19,9 @@ class _BlogsListPageState extends State<BlogsListPage> {
 
   _getData() async {
     //parse our URL
+    setState((){
+      list.clear();
+    });
     var uri = Uri.parse("https://flutter-blogs.herokuapp.com/blog/getBlogs");
     var response = await http.get(uri);
 
@@ -57,6 +62,9 @@ class _BlogsListPageState extends State<BlogsListPage> {
               child: ListTile(
                 title: Text("\"${list[index].blogTitle}\""),
                 subtitle: Text("By ${list[index].authorName}"),
+                onTap: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => Blog(data: list[index],)));
+                },
                 // leading: Text(list[index].date ?? "date"),
               ),
             );
@@ -68,7 +76,7 @@ class _BlogsListPageState extends State<BlogsListPage> {
                     minWidth: MediaQuery.of(context).size.width,
                     minHeight: MediaQuery.of(context).size.height
                 ),
-                child: Center(child: const Text("No blogs yet, check back later :)"))
+                child: const Center(child: Text("No blogs yet, check back later :)"))
             )
         ),
       ),
