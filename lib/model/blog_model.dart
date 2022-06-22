@@ -8,12 +8,12 @@ class BlogModel {
 
   BlogModel({this.date, this.authorName, this.blogContent, this.blogTitle});
 
-  String toJSON() {
-    return json.encode({
+  toJSON() {
+    return {
       "blog": blogContent,
       "authorName": authorName,
       "blogTitle": blogTitle
-    });
+    };
   }
 
   static BlogModel fromJSON(decodedData) {

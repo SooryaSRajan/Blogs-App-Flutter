@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:blog_app/model/blog_model.dart';
-import 'package:flutter/foundation.dart';
+import 'package:blog_app/screens/add_blog.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -81,7 +81,10 @@ class _BlogsListPageState extends State<BlogsListPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
+        onPressed: () {
+          list.add(BlogModel());
+           Navigator.push(context, MaterialPageRoute(builder: (context) => AddBlog(model: list.last,)));
+        },
         label: const Text("Add Blog"),
         icon: const Icon(Icons.add),
       ),
