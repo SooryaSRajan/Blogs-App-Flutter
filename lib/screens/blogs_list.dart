@@ -1,4 +1,9 @@
+import 'dart:convert';
+
+import 'package:blog_app/model/blog_model.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class BlogsListPage extends StatefulWidget {
   const BlogsListPage({Key? key}) : super(key: key);
@@ -8,6 +13,31 @@ class BlogsListPage extends StatefulWidget {
 }
 
 class _BlogsListPageState extends State<BlogsListPage> {
+  List<BlogModel> list = [];
+
+  _getData() async {
+    //parse our URL
+    var uri = Uri.parse("https://flutter-blogs.herokuapp.com/blog/getBlogs");
+    var response = await http.get(uri);
+
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body)["data"]; //List Data
+      for (var i in data) {
+        setState(() {
+          list.add(BlogModel.fromJSON(i));
+        });
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _getData();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,9 +45,14 @@ class _BlogsListPageState extends State<BlogsListPage> {
         title: const Text("Blogs"),
       ),
       body: ListView.builder(
+        itemCount: list.length,
         itemBuilder: (BuildContext context, int index) {
-          return const Card(
-            child: ListTile(),
+          return Card(
+            child: ListTile(
+              title: Text( "\"${list[index].blogTitle}\""),
+              subtitle: Text("By ${list[index].authorName}"),
+              // leading: Text(list[index].date ?? "date"),
+            ),
           );
         },
       ),

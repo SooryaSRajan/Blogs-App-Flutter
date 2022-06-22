@@ -16,8 +16,7 @@ class BlogModel {
     });
   }
 
-  BlogModel fromJSON(String data) {
-    var decodedData = json.decode(data);
+  static BlogModel fromJSON(decodedData) {
     return BlogModel(
         date: decodedData['date'],
         authorName: decodedData['authorName'],
